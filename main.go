@@ -52,6 +52,7 @@ func main() {
 
 	rota.HandleFunc("/user", getUsers).Methods("GET")
 	rota.HandleFunc("/repos/{username}", getRepositorys).Methods("GET")
+	rota.HandleFunc("/repos/{username}/{type}/{per_page}/{page}/{sort}/{direction}", getRepositorys).Methods("GET")
 	rota.HandleFunc("/user/{username}", getUserDinamic).Methods("GET")
 
 	port := goDotEnvVariable("PORT")
@@ -115,9 +116,13 @@ func getRepositorys(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 	username := vars["username"]
+	typeQuery := vars["type"]
+	per_page := vars["per_page"]
+	page := vars["page"]
+	sort := vars["sort"]
+	direction := vars["direction"]
 
-	apiUserDinamic := goDotEnvVariable("API_URL_GITHUB_USER_DINAMIC") + username + "/repos"
-
+	apiUserDinamic := goDotEnvVariable("API_URL_GITHUB_USER_DINAMIC") + username + "/repos?type=" + typeQuery + "&per_page=" + per_page + "&page=" + page + "&sort=" + sort + "&direction=" + direction
 	response, err := http.Get(apiUserDinamic)
 
 	if err != nil {
